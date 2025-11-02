@@ -94,7 +94,7 @@ vuelo111.agregar_equipaje(equipaje1)
 
 print(vuelo111.lista_de_pasajeros)
 print(vuelo111.lista_de_equipaje)
-
+print(vuelo111.lista_de_pasajeros)
 # Mostrar la representación del vuelo usando __str__
 
 print(vuelo111)
@@ -102,3 +102,4 @@ print(pasajero1)
 print(equipaje1)
 
 pasajero1.agregar_historial(vuelo111)
+
