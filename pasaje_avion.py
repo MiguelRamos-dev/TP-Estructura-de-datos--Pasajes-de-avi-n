@@ -15,91 +15,172 @@ Teoría
     Explicar el concepto de encapsulamiento y su importancia en la programación orientada a objetos.
     Justificar la elección de atributos y métodos para modelar pasajeros, vuelos y reservas.
     Analizar ventajas y desventajas de distintas representaciones de listas y pilas para gestionar reservas
-    y equipaje.
-Práctica
-    Definir la clase Pasajero con atributos: nombre, documento, nacionalidad, historial de vuelos,
-    equipaje, etc.
-    Definir la clase Vuelo con atributos: código, origen, destino, fecha, lista de pasajeros, etc.
-    Implementar interfaces para agregar/eliminar reservas y equipaje.
-    Implementar una estructura recursiva para calcular el total de equipaje de un pasajero
-    considerando conexiones y escalas.
-    Adicional obligatorio
-    Presentación (diapositivas o video corto) explicando el diseño de las clases y la lógica de
-    encapsulamiento.
-"""
+    y equipaje."""
+
+#PRACTICA
+    
+"""Definir la clase Pasajero con atributos: nombre, documento, nacionalidad, historial de vuelos,
+equipaje, etc."""
+
+"""Definir la clase Vuelo con atributos: código, origen, destino, fecha, lista de pasajeros, etc."""
+
+"Implementar interfaces para agregar/eliminar reservas y equipaje."""
+
+"""Implementar una estructura recursiva para calcular el total de equipaje de un pasajero
+considerando conexiones y escalas."""
+
 class Equipaje:
-    #creamos un metodo constructor para los atributos del equipaje.
-    def __init__(self, peso, dimensiones, descripcion):
+    
+    def __init__(self, peso, descripcion): #INICIALIZAMOS EQUIPAJE
         self.peso = peso
-        self.dimensiones = dimensiones
         self.descripcion = descripcion
-
+        
     def __str__(self):
-        return f"{self.descripcion} - {self.peso}kg ({self.dimensiones})"
+        return f"Equipaje(descripcion={self.descripcion}, peso={self.peso}kg)"
+        
+class Reserva:
+    
+    def __init__(self, codigo_vuelo, documento_pasajero): #INIT DE RESERVA
+        self.codigo_vuelo = codigo_vuelo
+        self.documento_pasajero = documento_pasajero
+    
+    def __str__(self):
+        return f"Reserva(codigo_vuelo={self.codigo_vuelo}, documento_pasajero={self.documento_pasajero})"
 
-
-class Pasajero: 
-    #creamos un metodo constructor para los atributos del pasajero.
-    def __init__(self, nombre, documento, nacionalidad, historial_de_vuelos, equipaje):
+class Pasajero:
+    
+    def __init__ (self, nombre, documento, nacionalidad): #INIT PASAJERO
         self.nombre = nombre
         self.documento = documento
         self.nacionalidad = nacionalidad
-        self.historial_de_vuelos = []
-        self.equipaje = equipaje
-
-    def agregar_historial(self, Vuelo):
-        self.historial_de_vuelos.append(Vuelo.codigo)
-
-    def __str__(self):
-        return f"Pasajero {self.nombre} con documento {self.documento} y nacionalidad {self.nacionalidad} con el historial de vuelos: {self.historial_de_vuelos} y el equipaje: {self.equipaje}"
+        self.equipajes = []
+        self.historial_vuelos = []
+        self.reservas = []
+       
+    def mostrar_info_pasajero (self):
+        print(f"Nombre: {self.nombre}")
+        print(f"Documento: {self.documento}")
+        print(f"Nacionalidad: {self.nacionalidad}")
+        for equipaje in self.equipajes:
+            print(equipaje)
+        print(f"Peso total de equipajes: {self.peso_equipajes}kg")
+        for reserva in self.reservas:
+            print(reserva)
+        for vuelo in self.historial_vuelos:
+            print(vuelo.codigo) 
         
-
+    def agregar_equipaje(self, equipaje):        
+        if equipaje in self.equipajes:
+            print("El equipaje ya está registrado.")
+        else:
+            self.equipajes.append(equipaje)
+            
+    def eliminar_equipaje(self, equipaje):
+        self.equipajes.remove(equipaje)
+        
+    def agregar_reserva(self, reserva):
+        if reserva in self.reservas:
+            print("La reserva ya está registrada.")
+        if reserva.documento_pasajero != self.documento:
+            print("El documento del pasajero no coincide con la reserva.")
+        else:
+            self.reservas.append(reserva)
+    
+    def eliminar_reserva(self, reserva):
+        self.reservas.remove(reserva)
+    
+    def peso_total_equipajes(self):
+        total_peso = 0
+        for equipaje in self.equipajes:
+            total_peso += equipaje.peso
+        return total_peso
+        
 class Vuelo:
-    #creamos un metodo constructor para los atributos del vuelo.
-    def __init__(self, codigo, origen, destino, fecha, lista_de_pasajeros, lista_de_equipaje):
+    
+    def __init__(self, codigo, origen, destino, fecha):
         self.codigo = codigo
         self.origen = origen
         self.destino = destino
         self.fecha = fecha
-        self.lista_de_pasajeros = lista_de_pasajeros
-        self.lista_de_equipaje = lista_de_equipaje
-
-    def __str__(self):
-        return f"Vuelo {self.codigo} desde {self.origen} a {self.destino} el {self.fecha} con los siguientes pasajeros: {self.lista_de_pasajeros} y los siguientes equipajes: {self.lista_de_equipaje}"
-    
-    #creamos un metodo para agregar un pasajero al vuelo.
+        self.lista_pasajeros = []
+        self.escalas = []
+        self.conexiones = []
+        
+    def mostrar_info_vuelo(self):
+        print(f"Código: {self.codigo}")
+        print(f"Origen: {self.origen}")
+        print(f"Destino: {self.destino}")
+        print(f"Fecha: {self.fecha}")
+        
+        print("Lista de pasajeros:")
+        print("total pasajeros:", len(self.lista_pasajeros))
+        if len(self.lista_pasajeros) == 0:
+            print("No hay pasajeros en este vuelo.")
+        else:
+            for pasajero in self.lista_pasajeros:
+             print(pasajero.nombre)
+            
+        print("Escalas:")
+        print("total escalas:", len(self.escalas))  
+        if len(self.escalas) == 0:
+            print("No hay escalas en este vuelo.")
+        else:
+            for escala in self.escalas:
+             print(escala)
+            
+        print("Conexiones:")
+        print("total conexiones:", len(self.conexiones))
+        if len(self.conexiones) == 0:
+            print("No hay conexiones en este vuelo.")
+        else:
+            for conexion in self.conexiones:
+                print(conexion)
+        
     def agregar_pasajero(self, pasajero):
-        self.lista_de_pasajeros.append(pasajero)
+        if pasajero in self.lista_pasajeros:
+            print("El pasajero ya está en la lista.")
+        else:
+            self.lista_pasajeros.append(pasajero)
+    
+    def eliminar_pasajero(self, pasajero):  
+        self.lista_pasajeros.remove(pasajero)
+    
+    def agregar_escala(self, vuelo):
+        if vuelo in self.escalas:
+            print("La escala ya está registrada.")
+        else:
+            self.escalas.append(vuelo)
+    
+    def eliminar_escala(self, vuelo):
+        self.escalas.remove(vuelo)
         
-    #creamos un metodo para eliminar un pasajero del vuelo.
-    def eliminar_pasajero(self, pasajero):
-        self.lista_de_pasajeros.remove(pasajero)
+    def agregar_conexion(self, vuelo):
+        if vuelo in self.conexiones:
+            print("La conexión ya está registrada.")
+        else:
+            self.conexiones.append(vuelo)  
+    
+    def eliminar_conexion(self, vuelo):
+        self.conexiones.remove(vuelo)
+    
+    
+    def calcular_total_equipaje_pasajero(self, pasajero, visitados=None):
         
-    #creamos un metodo para agregar equipaje al vuelo.
-    def agregar_equipaje(self, equipaje):
-        self.lista_de_equipaje.append(equipaje)
+        if visitados is None: 
+            visitados = set()
         
-    #creamos un metodo para eliminar equipaje del vuelo.
-    def eliminar_equipaje(self, equipaje):
-        self.lista_de_equipaje.remove(equipaje)
+        if self.codigo in visitados:
+            return 0
+        else:
+            visitados.add(self.codigo)
 
+        peso_total = 0
+        if pasajero in self.lista_pasajeros:
+            peso_total += sum(e.peso for e in pasajero.equipajes)
 
-vuelo111 = Vuelo("111", "Buenos Aires", "Madrid", "2025-01-01", [], [])
+        for escala in self.escalas:
+            peso_total += escala.calcular_total_equipaje_pasajero(pasajero, visitados)
+        for conexion in self.conexiones:
+            peso_total += conexion.calcular_total_equipaje_pasajero(pasajero, visitados)
 
-pasajero1 = Pasajero("Juan Perez", "123456789", "Argentina", [], [])
-equipaje1 = Equipaje(10, "100x100x100", "Equipaje de mano")
-
-vuelo111.agregar_pasajero(pasajero1)
-vuelo111.agregar_equipaje(equipaje1)
-
-print(vuelo111.lista_de_pasajeros)
-print(vuelo111.lista_de_equipaje)
-print(vuelo111.lista_de_pasajeros)
-# Mostrar la representación del vuelo usando __str__
-
-print(vuelo111)
-print(pasajero1)
-print(equipaje1)
-
-pasajero1.agregar_historial(vuelo111)
-
+        return peso_total
