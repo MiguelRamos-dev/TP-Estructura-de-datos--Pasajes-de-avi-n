@@ -122,24 +122,3 @@ class NodoVueloGeneral:
         return None
 
 
-# ---- Integración con clase Pasajero ----
-
-class Pasajero:
-    
-    def __init__ (self, nombre, documento, nacionalidad):
-        self.nombre = nombre
-        self.documento = documento
-        self.nacionalidad = nacionalidad
-        self.equipajes = []
-        self.reservas = []
-        self.historial_vuelos_arbol = None  # árbol general de vuelos
-    
-    def establecer_historial_vuelos(self, vuelo_raiz):
-        """Inicializa el árbol general de historial de vuelos"""
-        self.historial_vuelos_arbol = NodoVueloGeneral(vuelo_raiz)
-    
-    def mostrar_historial_preorden(self):
-        if self.historial_vuelos_arbol:
-            self.historial_vuelos_arbol.preorden()
-        else:
-            print("No hay historial de vuelos registrado.")
