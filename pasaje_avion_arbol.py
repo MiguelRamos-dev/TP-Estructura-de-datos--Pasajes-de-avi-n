@@ -121,4 +121,3 @@ class NodoVueloGeneral:
                 return resultado
         return None
 
-
