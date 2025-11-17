@@ -30,71 +30,98 @@ equipaje, etc."""
 considerando conexiones y escalas."""
 
 class Equipaje:
-    
-    def __init__(self, peso, descripcion): #INICIALIZAMOS EQUIPAJE
+    """Representa un bulto de equipaje asociado a un pasajero."""
+
+    def __init__(self, numero_serie, peso, descripcion):
+        self.numero_serie = numero_serie
         self.peso = peso
         self.descripcion = descripcion
-        
+
     def __str__(self):
-        return f"Equipaje(descripcion={self.descripcion}, peso={self.peso}kg)"
-        
+        return (
+            f"Equipaje(serie={self.numero_serie}, descripcion={self.descripcion}, "
+            f"peso={self.peso}kg)"
+        )
+
+
 class Reserva:
-    
-    def __init__(self, codigo_vuelo, documento_pasajero): #INIT DE RESERVA
+    """Asocia un pasajero con un vuelo."""
+
+    def __init__(self, reserva_id, codigo_vuelo, pasajero_id):
+        self.reserva_id = reserva_id
         self.codigo_vuelo = codigo_vuelo
-        self.documento_pasajero = documento_pasajero
-    
+        self.pasajero_id = pasajero_id
+
     def __str__(self):
-        return f"Reserva(codigo_vuelo={self.codigo_vuelo}, documento_pasajero={self.documento_pasajero})"
+        return (
+            f"Reserva(id={self.reserva_id}, codigo_vuelo={self.codigo_vuelo}, "
+            f"pasajero_id={self.pasajero_id})"
+        )
+
 
 class Pasajero:
-    
-    def __init__ (self, nombre, documento, nacionalidad): #INIT PASAJERO
+    """Modelo de pasajero con historial y equipajes."""
+
+    def __init__(self, pasajero_id, nombre, documento, nacionalidad):
+        self.pasajero_id = pasajero_id
         self.nombre = nombre
         self.documento = documento
         self.nacionalidad = nacionalidad
         self.equipajes = []
         self.historial_vuelos = []
         self.reservas = []
-       
-    def mostrar_info_pasajero (self):
+
+    def mostrar_info_pasajero(self):
+        print(f"ID: {self.pasajero_id}")
         print(f"Nombre: {self.nombre}")
         print(f"Documento: {self.documento}")
         print(f"Nacionalidad: {self.nacionalidad}")
-        for equipaje in self.equipajes:
-            print(equipaje)
-        print(f"Peso total de equipajes: {self.peso_equipajes}kg")
-        for reserva in self.reservas:
-            print(reserva)
-        for vuelo in self.historial_vuelos:
-            print(vuelo.codigo) 
-        
-    def agregar_equipaje(self, equipaje):        
-        if equipaje in self.equipajes:
-            print("El equipaje ya está registrado.")
+        print("Equipajes:")
+        if not self.equipajes:
+            print("  - Sin equipajes registrados.")
+        else:
+            for equipaje in self.equipajes:
+                print(f"  - {equipaje}")
+        print(f"Peso total de equipajes: {self.peso_total_equipajes()}kg")
+        print("Reservas:")
+        if not self.reservas:
+            print("  - Sin reservas.")
+        else:
+            for reserva in self.reservas:
+                print(f"  - {reserva}")
+        if self.historial_vuelos:
+            print("Historial de vuelos:")
+            for vuelo in self.historial_vuelos:
+                print(f"  - {vuelo.codigo}")
+
+    def agregar_equipaje(self, equipaje):
+        if any(e.numero_serie == equipaje.numero_serie for e in self.equipajes):
+            print("El equipaje ya está registrado para este pasajero.")
         else:
             self.equipajes.append(equipaje)
-            
+
     def eliminar_equipaje(self, equipaje):
         self.equipajes.remove(equipaje)
-        
+
     def agregar_reserva(self, reserva):
-        if reserva in self.reservas:
+        if any(r.reserva_id == reserva.reserva_id for r in self.reservas):
             print("La reserva ya está registrada.")
-        if reserva.documento_pasajero != self.documento:
-            print("El documento del pasajero no coincide con la reserva.")
-        else:
-            self.reservas.append(reserva)
-    
+            return
+        if reserva.pasajero_id != self.pasajero_id:
+            print("El ID del pasajero no coincide con la reserva.")
+            return
+        self.reservas.append(reserva)
+
     def eliminar_reserva(self, reserva):
         self.reservas.remove(reserva)
-    
+
     def peso_total_equipajes(self):
-        total_peso = 0
-        for equipaje in self.equipajes:
-            total_peso += equipaje.peso
-        return total_peso
-        
+        return sum(equipaje.peso for equipaje in self.equipajes)
+
+    def tiene_reserva_para_vuelo(self, codigo_vuelo):
+        return any(reserva.codigo_vuelo == codigo_vuelo for reserva in self.reservas)
+
+
 class Vuelo:
     
     def __init__(self, codigo, origen, destino, fecha):
@@ -184,3 +211,4 @@ class Vuelo:
             peso_total += conexion.calcular_total_equipaje_pasajero(pasajero, visitados)
 
         return peso_total
+
